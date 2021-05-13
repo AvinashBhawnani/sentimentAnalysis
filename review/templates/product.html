@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block body_content %}
+    <div class="row shadow-md mx-5 my-2">
+        <div class="col-md-5 border border-3">
+            <img src="https://www.online-tech-tips.com/wp-content/uploads/2019/12/electronic-gadgets.jpeg" alt="" class="img-fluid">
+        </div>
+        <div class="card col-md-5 m-3 p-3">
+            <h5>{{product.title}}</h5>
+            {% if product.price %}
+            <p class="card-text"><h6>Price: </h6>{{product.price|truncatechars:10}}</p>
+            {% else %}
+                <p class="card-text"><h6>Price: </h6>$45</p>
+            {% endif %}
+
+        </div>
+    </div>
+    {% if not analyse %}
+        {% for review in reviews %}
+            <div class="card mx-5 my-2 p-2">
+                <div class="card-body">
+                    {{review.text}}
+                </div>
+                <div class="card-footer">
+                    <p class="float-right">{{review.reviewer}}&nbsp;&nbsp;&nbsp;Rating={{review.rating}}</p>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="card mx-5 my-2 ">
+            <div class="card-footer">
+                <p class="float-right">and {{count}} more reviews..🤷‍♂️</p>
+            </div>
+        </div>
+    {% else %}
+        {% for review in reviews %}
+            <div class="card mx-5 my-2 p-2">
+                <div class="card-body">
+                    {{review.text}}
+                </div>
+                {% if review.sentiment == "POSITIVE" %}
+                    <div class="card-footer bg-success">
+                {% else %}
+                    <div class="card-footer bg-danger">
+                {% endif %}
+                        <p class="float-right">{{review.sentiment}}&nbsp;&nbsp;&nbsp;Score= {{review.score}}</p>
+                    </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+        
+    <div class="card mx-5 my-2">
+        <div class="card-footer">
+            <h3 class="text-center text-danger">Here is our sentiment analyzer to get through all reviews quickly!!😎</h3>
+        </div>
+        <div class="card-body">
+            <form action="{% url 'product' product.asin %}" method="POST">
+                {% csrf_token %}
+                <legend class="border-bottom mb-2 text-center" style="text-shadow: 2px 2px;">ANALYSE</legend>
+                <div class="form-group p-2">
+                    <select class="form-control" name="feature" id="feature">
+                        {% for feature in features%}
+                            <option value={{feature}}>{{feature}}</option>
+                        {% endfor %}
+                    </select>    
+                </div>  
+                <button class="btn btn-info float-right" type="submit">Analyse</button>
+            </form>
+        </div>
+    </div>
+{% endblock body_content %}
