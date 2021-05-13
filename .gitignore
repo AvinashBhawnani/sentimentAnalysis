@@ -105,6 +105,8 @@ celerybeat-schedule
 .spyproject
 
 # Environments
+.myenv
+myenv/
 .venv
 venv/
 ENV/
